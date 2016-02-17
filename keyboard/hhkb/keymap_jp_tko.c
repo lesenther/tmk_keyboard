@@ -13,8 +13,8 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
     KEYMAP_JP(ESC, 1,   2,   3,   4,   5,   6,   7,   8,   9,   0,   MINS,EQL, GRV,BSPC, \
               TAB, Q,   W,   E,   R,   T,   Y,   U,   I,   O,   P,   LBRC,RBRC, \
               LCTL,A,   S,   D,   F,   G,   H,   J,   K,   L,   SCLN,QUOT,BSLS,ENT, \
-              LSFT,Z,   X,   C,   V,   B,   N,   M,   COMM,DOT, SLSH,RSFT,UP,  FN0, \
-              FN0, LALT,LGUI,HOME,END, SPC,      PGUP,PGDN,RALT,DEL, LEFT,DOWN,RGHT),
+              LSFT,Z,   X,   C,   V,   B,   N,   M,   COMM,DOT, SLSH,RSFT,UP,  FN2, \
+                FN1, LALT,LGUI,HOME,END, SPC,      PGUP,PGDN,RALT,DEL,LEFT,DOWN,RGHT),
 
     /* Layer 1: HHKB mode (HHKB Fn)
      * ,-----------------------------------------------------------.
@@ -31,9 +31,9 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
      */
     KEYMAP_JP(GRV, F1,  F2,  F3,  F4,  F5,  F6,  F7,  F8,  F9,  F10, F11, F12, INS, DEL, \
               CAPS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,PSCR,SLCK,PAUS, UP, TRNS, \
-              MPLY,VOLD,VOLU,MUTE,TRNS,TRNS,PAST,PSLS,HOME,PGUP,LEFT,RGHT,TRNS,PENT, \
-              MYCM,TRNS,TRNS,TRNS,TRNS,TRNS,PPLS,PMNS,END, PGDN,DOWN,WBAK,PGUP,WFWD, \
-              TRNS,CALC,MAIL,TRNS,TRNS,  TRNS,   TRNS,TRNS,TRNS,TRNS,HOME,PGDN,END),
+              TRNS,VOLD,VOLU,MUTE,TRNS,TRNS,PAST,PSLS,HOME,PGUP,LEFT,RGHT,TRNS,PENT, \
+              TRNS,TRNS,TRNS,CALC,TRNS,TRNS,PPLS,PMNS,END, PGDN,DOWN,WBAK,PGUP,WFWD, \
+              TRNS,TRNS,TRNS,TRNS,TRNS,  TRNS,   TRNS,TRNS,TRNS,TRNS,HOME,PGDN,END),
 
     /* Layer 2: Mousekey mode
      * ,-----------------------------------------------------------.
@@ -48,14 +48,17 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
      * |   ||   |   |   |   |         |   |   |   |   ||   |   |   |
      * `-----------------------------------------------------------'
      */
-    KEYMAP_JP(ESC, F1,  F2,  F3,  F4,  F5,  F6,  F7,  F8,  F9,  F10, F11, F12, INS, BSPC, \
-              TAB, TRNS,TRNS,TRNS,TRNS,TRNS,WH_L,WH_D,WH_U,WH_R,TRNS,TRNS,TRNS, \
-              LCTL,TRNS,ACL0,ACL1,ACL2,TRNS,MS_L,MS_D,MS_U,MS_R,SCLN,QUOT,BSLS,ENT, \
-              LSFT,TRNS,TRNS,TRNS,TRNS,BTN3,BTN2,BTN1,BTN4,BTN5,SLSH,RSFT,TRNS,TRNS, \
-              FN0, LALT,LGUI,HOME,END,   BTN1,   PGUP,PGDN,RALT,DEL,LEFT,DOWN,RGHT),
+    //        ESC , 1  , 2  , 3  , 4  , 5  , 6  , 7  , 8  , 9  , 0  , -  , =  , `  , BS
+    KEYMAP_JP(TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS, \
+    //        TAB , Q  ,  W , E  , R  , T  , Y  , U  , I  , O  , P  , {  , }
+              TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS, \
+    //        CTRL, A  ,  S , D  , F  , G  , H  , J  , K  , L  , ;  , '  , \  , ENT
+              TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS, \
+    //        SHFT, Z  ,  X , C  , V  , B  , N  , M  , ,  , .  , /  ,SHFT, /\ , Fn
+              TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,MS_U,TRNS, \
+    //         Fn , ALT, <> , HH ,KANA,  SPACE  , REF, UND, ALT, -\ , <- , \/ , ->
+              TRNS,TRNS,ACL0,ACL1,ACL2,   BTN1  ,BTN2,BTN3,BTN4,BTN5,MS_L,MS_D,MS_R),
 };
-
-
 
 /*
  * Fn action definition
@@ -65,6 +68,10 @@ const uint16_t fn_actions[] __attribute__ ((section (".keymap.fn_actions"))) = {
 #else
 const uint16_t fn_actions[] PROGMEM = {
 #endif
-    [0] = ACTION_LAYER_MOMENTARY(1),
-    [1] = ACTION_LAYER_TOGGLE(2),
+    [0] = ACTION_DEFAULT_LAYER_SET(0),                // Default layer(not used)
+    [1] = ACTION_LAYER_MOMENTARY(1),
+    // [1] = ACTION_LAYER_MOMENTARY(1),
+    // [2] = ACTION_LAYER_TOGGLE(2),
+    // [2] = ACTION_MODS_TAP_KEY(MOD_LCTL, KC_ESC), // LControl with tap Esc*
+    [2] = ACTION_LAYER_TOGGLE(2),
 };
