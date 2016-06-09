@@ -1,5 +1,5 @@
 /*
- * HHKB JP Layout - 1's Modification
+ * HHKB JP Layout - tko's Modification
  */
 #include "keymap_common.h"
 
