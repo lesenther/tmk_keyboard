@@ -27,15 +27,34 @@
 #include "sleep_led.h"
 #include "led.h"
 #endif
+#include "hook.h"
+
+/* TMK hooks */
+__attribute__((weak))
+void hook_usb_wakeup(void) {
+#ifdef SLEEP_LED_ENABLE
+    sleep_led_disable();
+    // NOTE: converters may not accept this
+    led_set(host_keyboard_leds());
+#endif /* SLEEP_LED_ENABLE */
+}
+
+ __attribute__((weak))
+void hook_usb_suspend_entry(void) {
+#ifdef SLEEP_LED_ENABLE
+    sleep_led_enable();
+#endif /* SLEEP_LED_ENABLE */
+}
+
 
 /* ---------------------------------------------------------
  *       Global interface variables and declarations
  * ---------------------------------------------------------
  */
 
-uint8_t keyboard_idle = 0;
-uint8_t keyboard_protocol = 1;
-uint16_t keyboard_led_stats = 0;
+uint8_t keyboard_idle __attribute__((aligned(2))) = 0;
+uint8_t keyboard_protocol __attribute__((aligned(2))) = 1;
+uint16_t keyboard_led_stats __attribute__((aligned(2))) = 0;
 volatile uint16_t keyboard_idle_count = 0;
 static virtual_timer_t keyboard_idle_timer;
 static void keyboard_idle_timer_cb(void *arg);
@@ -134,7 +153,7 @@ static const uint8_t keyboard_hid_report_desc_data[] = {
   0x95, KBD_REPORT_KEYS,          //   Report Count (),
   0x75, 0x08,                //   Report Size (8),
   0x15, 0x00,                //   Logical Minimum (0),
-  0x25, 0xFF,                //   Logical Maximum(255),
+  0x26, 0xFF, 0x00,          //   Logical Maximum(255),
   0x05, 0x07,                //   Usage Page (Key Codes),
   0x19, 0x00,                //   Usage Minimum (0),
   0x29, 0xFF,                //   Usage Maximum (255),
@@ -280,7 +299,7 @@ static const uint8_t extra_hid_report_desc_data[] = {
   0xa1, 0x01,                      // COLLECTION (Application)
   0x85, REPORT_ID_SYSTEM,          //   REPORT_ID (2)
   0x15, 0x01,                      //   LOGICAL_MINIMUM (0x1)
-  0x25, 0xb7,                      //   LOGICAL_MAXIMUM (0xb7)
+  0x26, 0xb7, 0x00,                //   LOGICAL_MAXIMUM (0xb7)
   0x19, 0x01,                      //   USAGE_MINIMUM (0x1)
   0x29, 0xb7,                      //   USAGE_MAXIMUM (0xb7)
   0x75, 0x10,                      //   REPORT_SIZE (16)
@@ -795,19 +814,13 @@ static void usb_event_cb(USBDriver *usbp, usbevent_t event) {
 
   case USB_EVENT_SUSPEND:
     //TODO: from ISR! print("[S]");
-#ifdef SLEEP_LED_ENABLE
-    sleep_led_enable();
-#endif /* SLEEP_LED_ENABLE */
+    hook_usb_suspend_entry();
     return;
 
   case USB_EVENT_WAKEUP:
     //TODO: from ISR! print("[W]");
     suspend_wakeup_init();
-#ifdef SLEEP_LED_ENABLE
-    sleep_led_disable();
-    // NOTE: converters may not accept this
-    led_set(host_keyboard_leds());
-#endif /* SLEEP_LED_ENABLE */
+    hook_usb_wakeup();
     return;
 
   case USB_EVENT_STALLED:
@@ -1350,7 +1363,7 @@ int8_t sendchar(uint8_t c) {
     return 0;
   }
   osalSysUnlock();
-  /* Timeout after 5us if the queue is full.
+  /* Timeout after 100us if the queue is full.
    * Increase this timeout if too much stuff is getting
    * dropped (i.e. the buffer is getting full too fast
    * for USB/HIDRAW to dequeue). Another possibility
