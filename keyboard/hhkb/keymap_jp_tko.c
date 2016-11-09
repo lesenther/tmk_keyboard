@@ -73,5 +73,5 @@ const uint16_t fn_actions[] PROGMEM = {
     // [1] = ACTION_LAYER_MOMENTARY(1),
     // [2] = ACTION_LAYER_TOGGLE(2),
     // [2] = ACTION_MODS_TAP_KEY(MOD_LCTL, KC_ESC), // LControl with tap Esc*
-    [2] = ACTION_LAYER_TOGGLE(2),
+    // [2] = ACTION_LAYER_TOGGLE(2), // 2016-11-08 - disabled
 };
