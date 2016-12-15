@@ -1,0 +1,3 @@
+TARGET = hhkb_tko
+HHKB_JP = yes
+include Makefile
