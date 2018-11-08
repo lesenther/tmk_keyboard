@@ -12,9 +12,9 @@ const uint8_t keymaps[][MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
     /* Layer 0: Default Layer */
     KEYMAP_JP(ESC, 1,   2,   3,   4,   5,   6,   7,   8,   9,   0,   MINS,EQL,BSLS, GRV, \ 
               TAB, Q,   W,   E,   R,   T,   Y,   U,   I,   O,   P,   LBRC,RBRC, \
-              LCTL,A,   S,   D,   F,   G,   H,   J,   K,   L,   SCLN,QUOT,BSPC,ENT, \
-              LSFT,Z,   X,   C,   V,   B,   N,   M,   COMM,DOT, SLSH,RSFT,UP,  FN0, \
-              FN0, LALT,LGUI,HOME,END, SPC,      PGUP,PGDN,RALT,DEL,LEFT,DOWN,RGHT),
+              LCTL,A,   S,   D,   F,   G,   H,   J,   K,   L,   SCLN,QUOT,RSFT,ENT, \
+              LSFT,Z,   X,   C,   V,   B,   N,   M,   COMM,DOT, SLSH,BSLS,UP,  BSPC, \
+              FN0, LALT,LGUI,HOME,END, SPC,      PGUP,PGDN,RALT,DEL, LEFT,DOWN,RGHT),
 
     /* Layer 1: HHKB mode (HHKB Fn)
      * ,-----------------------------------------------------------.
@@ -75,4 +75,5 @@ const uint16_t fn_actions[] PROGMEM = {
     // [2] = ACTION_LAYER_TOGGLE(2),
     // [2] = ACTION_MODS_TAP_KEY(MOD_LCTL, KC_ESC), // LControl with tap Esc*
     // [2] = ACTION_LAYER_TOGGLE(2), // 2016-11-08 - disabled
+    // [1] = ACTION_LAYER_TOGGLE(2), // 2016-11-08 - disabled
 };
